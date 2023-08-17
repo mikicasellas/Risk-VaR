@@ -784,6 +784,7 @@ class PickandsEstimator:
     
     
     def gev_parameter(self, plot: bool=True, n_iter: int=100) -> float:
+        print('BRUH')
         """
         Function to calculate the estimator of Pickands with the parameter of
         the GEV function of a series of values.
@@ -853,9 +854,10 @@ class PickandsEstimator:
             plt.xlabel("k")
             plt.ylabel("Pickands' estimator")
             plt.subplots_adjust(hspace=0.3)
-            plt.show()
+            return xi, fig
+        else:
 
-        return xi
+            return xi, None
 
 
 #------------------------------------------------------------------------------ 
@@ -1077,7 +1079,7 @@ class ExpectedShortfall:
                 bins=bins,
                 density=True,
                 alpha=0.6,
-                label="Stock returns"
+                label="Returns"
             )
             plt.axvline(x=var, color="aqua", label="Empirical VaR")
             plt.axvline(x=cvar, color="royalblue", label="Empirical CVaR")
@@ -1086,11 +1088,9 @@ class ExpectedShortfall:
             plt.ylabel("Frequency")
             plt.legend(loc="best")
             plt.subplots_adjust(hspace=0.3)
-            plt.show()
+            return cvar, fig
         else:
-            pass
-        
-        return cvar
+            return cvar, None
     
     
     def parametrical_cvar(self, plot: bool=False, bins: int=50) -> float:
@@ -1161,15 +1161,15 @@ class ExpectedShortfall:
             ).mean()
         
         if plot:
-            fig = plt.figure(figsize=(30, 10))
-            plt.subplot(1, 1, 1)
-            plt.hist(
+            fig, ax = plt.subplots(figsize=(30, 10))
+            
+            ax.hist(
                 self.array,
                 color="#9F81F7",
                 bins=bins,
                 density=True,
                 alpha=0.6,
-                label="Stock returns"
+                label="Returns"
             )
             xmin, xmax = plt.xlim()
             x = np.linspace(
@@ -1189,7 +1189,7 @@ class ExpectedShortfall:
                 ).std(),
                 100
             )
-            plt.plot(
+            ax.plot(
                 x,
                 scs.norm.pdf(
                     x,
@@ -1206,18 +1206,16 @@ class ExpectedShortfall:
                 linewidth=2,
                 label="Normal distribution"
             )
-            plt.axvline(x=var, color="aqua", label="Parametrical VaR")
-            plt.axvline(x=cvar, color="royalblue", label="Parametrical CVaR")
-            plt.title("Distribution of returns and parametrical thresholds for VaR and CVaR")
-            plt.xlabel("Return")
-            plt.ylabel("Frequency")
-            plt.legend(loc="best")
-            plt.subplots_adjust(hspace=0.3)
-            plt.show()
+            ax.axvline(x=var, color="aqua", label="Parametrical VaR")
+            ax.axvline(x=cvar, color="royalblue", label="Parametrical CVaR")
+            ax.set_title("Distribution of returns and parametrical thresholds for VaR and CVaR")
+            ax.set_xlabel("Return")
+            ax.set_ylabel("Frequency")
+            ax.legend(loc="best")
+            
+            return cvar, fig
         else:
-            pass
-        
-        return cvar
+            return cvar, None
     
     
     def non_parametrical_cvar(self, random_state: int=42, n_iter: int=100000,
@@ -1314,10 +1312,11 @@ class ExpectedShortfall:
                 axis=self.axis
             ).mean()
         
+
         if plot:
-            fig = plt.figure(figsize=(30, 10))
-            plt.subplot(1, 1, 1)
-            plt.hist(
+            fig, ax = plt.subplots(figsize=(30, 10))
+            
+            ax.hist(
                 simulated_distribution,
                 color="#9F81F7",
                 bins=bins,
@@ -1343,7 +1342,7 @@ class ExpectedShortfall:
                 ).std(),
                 100
             )
-            plt.plot(
+            ax.plot(
                 x,
                 scs.norm.pdf(
                     x,
@@ -1360,19 +1359,16 @@ class ExpectedShortfall:
                 linewidth=2,
                 label="Normal distribution"
             )
-            plt.axvline(x=var, color="aqua", label="Non-parametrical VaR")
-            plt.axvline(x=cvar, color="royalblue", label="Non-parametrical CVaR")
-            plt.title("Distribution of simulated returns and parametrical thresholds \
-                      for VaR and CVaR")
-            plt.xlabel("Return")
-            plt.ylabel("Frequency")
-            plt.legend(loc="best")
-            plt.subplots_adjust(hspace=0.3)
-            plt.show()
+            ax.axvline(x=var, color="aqua", label="Non-parametrical VaR")
+            ax.axvline(x=cvar, color="royalblue", label="Non-parametrical CVaR")
+            ax.set_title("Distribution of simulated returns and parametrical thresholds for VaR and CVaR")
+            ax.set_xlabel("Return")
+            ax.set_ylabel("Frequency")
+            ax.legend(loc="best")
+            
+            return cvar, fig
         else:
-            pass
-        
-        return cvar
+            return cvar, None
     
     
     def extreme_cvar(self, k: int=5, plot: bool=False, bins: int=50) -> float:
@@ -1452,10 +1448,11 @@ class ExpectedShortfall:
                 axis=self.axis
             ).mean()
         
+
         if plot:
-            fig = plt.figure(figsize=(30, 10))
-            plt.subplot(1, 1, 1)
-            plt.hist(
+            fig, ax = plt.subplots(figsize=(30, 10))
+            
+            ax.hist(
                 self.array,
                 color="#9F81F7",
                 bins=bins,
@@ -1463,18 +1460,16 @@ class ExpectedShortfall:
                 alpha=0.6,
                 label="Stock returns"
             )
-            plt.axvline(x=var, color="aqua", label="EVT VaR")
-            plt.axvline(x=cvar, color="royalblue", label="EVT CVaR")
-            plt.title("Distribution of returns and EVT thresholds for VaR and CVaR")
-            plt.xlabel("Return")
-            plt.ylabel("Frequency")
-            plt.legend(loc="best")
-            plt.subplots_adjust(hspace=0.3)
-            plt.show()
+            ax.axvline(x=var, color="aqua", label="EVT VaR")
+            ax.axvline(x=cvar, color="royalblue", label="EVT CVaR")
+            ax.set_title("Distribution of returns and EVT thresholds for VaR and CVaR")
+            ax.set_xlabel("Return")
+            ax.set_ylabel("Frequency")
+            ax.legend(loc="best")
+
+            return cvar, fig
         else:
-            pass
-        
-        return cvar
+            return cvar, None
 
 
 #------------------------------------------------------------------------------
