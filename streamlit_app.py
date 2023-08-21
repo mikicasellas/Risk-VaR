@@ -5,7 +5,7 @@ import pyRiskadjusted
 import numpy as np
 from fmp_python.fmp import FMP
 
-fmp = FMP(api_key='e69c302511d90ee39aafb104a637eb0b', output_format='pandas')
+fmp = FMP(api_key=st.secrets['API_key'], output_format='pandas')
 
 def compute_portfolio_metrics(weights, tickers):
     
